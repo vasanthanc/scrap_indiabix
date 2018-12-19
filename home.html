@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--<script type="text/javascript" src="https://raw.githubusercontent.com/vasanthanc/scrap_indiabix/master/resources/questions_data.json"></script>-->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="data"></div>
+</body>
+<script type="text/javascript">
+    var fetch = new XMLHttpRequest();
+    var cartItemsList = document.getElementById("data");
+    fetch.open('GET','https://raw.githubusercontent.com/vasanthanc/scrap_indiabix/master/resources/questions_data.json',true);
+    fetch.onload = function() {
+        if (this.status == 200) {
+            var elem = JSON.parse(this.responseText);
+            var output = '';
+            for (var i in elem) {
+                output += `
+                    <div>
+                        <p>NO : ${elem[i].question_number}</p>
+                        <p>Question : ${elem[i].question}</p>
+                `;
+                if ("question_resource" in elem[i]) {
+                    output += `
+                    <img src=${elem[i].question_resource} alt="IMAGE">
+                    `;
+                    // break
+                }
+                for (var j in elem[i].options) {
+                    output += `
+                    <p>${String.fromCharCode(65+Number(j))}:    ${elem[i].options[j]}</p>
+                    `
+                }
+                output += `
+                <p>Answer: ${elem[i].answer}</p><p>explanation: ${elem[i].explanation}</p></div>
+                    `
+            }
+            cartItemsList.insertAdjacentHTML('beforeend', output)
+        }
+    }
+    fetch.send();
+</script>
+</html>
